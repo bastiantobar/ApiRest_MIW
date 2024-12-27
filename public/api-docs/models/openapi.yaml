@@ -275,6 +275,17 @@ paths:
           $ref: '#/components/responses/401_Unauthorized_Response'
         '403':
           $ref: '#/components/responses/403_Forbidden_Response'
+    options:
+            tags: [ '📊 Results' ]
+            summary: Provides the list of HTTP supported methods for Results.
+            description: 'Returns an `Allow` header with a comma-separated list of HTTP supported methods for the Results resource.'
+            operationId: api_results_options
+            responses:
+              '204':
+                description: '`Allow` header <Response body is empty>'
+                headers:
+                  Allow:
+                    $ref: '#/components/headers/Allow'
   /results/{resultId}:
     get:
       tags: [ '📊 Results' ]
@@ -340,6 +351,19 @@ paths:
           $ref: '#/components/responses/403_Forbidden_Response'
         '404':
           $ref: '#/components/responses/404_Resource_Not_Found_Response'
+    options:
+      tags: [ '📊 Results' ]
+      summary: Provides the list of HTTP supported methods for a specific result.
+      description: 'Returns an `Allow` header with a comma-separated list of HTTP supported methods for the specific result resource.'
+      operationId: api_results_options_id
+      parameters:
+        - $ref: '#/components/parameters/resultId'
+      responses:
+        '204':
+          description: '`Allow` header <Response body is empty>'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
 components:
   headers:
     ETag:
