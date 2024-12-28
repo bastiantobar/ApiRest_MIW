@@ -8,7 +8,10 @@ use JMS\Serializer\Annotation as Serializer;
 #[ORM\Entity, ORM\Table(name: 'results')]
 class Result
 {
-    public final const RESULT_ATTR = 'result';
+    public final const SCORE_ATTR = 'score';
+    public final const USER_ID_ATTR = 'userId';
+    public final const DATE_ATTR = 'timestamp';
+
     #[ORM\Column(
         name: 'id',
         type: 'integer',

@@ -181,7 +181,6 @@ class ApiUsersCommandController extends AbstractController implements ApiUsersCo
                 $format
             );
         }
-        // Puede editar otro usuario diferente sólo si tiene ROLE_ADMIN
         /** @var User $user */
         $user = $this->getUser();
         if (
@@ -206,7 +205,6 @@ class ApiUsersCommandController extends AbstractController implements ApiUsersCo
             return Utils::errorMessage(Response::HTTP_NOT_FOUND, null, $format);
         }
 
-        // Optimistic Locking (strong validation, password included)
         $etag = md5(json_encode($user, JSON_THROW_ON_ERROR) . $user->getPassword());
         if (!$request->headers->has('If-Match') || $etag != $request->headers->get('If-Match')) {
             return Utils::errorMessage(
@@ -237,7 +235,6 @@ class ApiUsersCommandController extends AbstractController implements ApiUsersCo
             $user->setPassword($hashedPassword);
         }
 
-        // roles
         if (isset($postData[User::ROLES_ATTR]) && is_array($postData[User::ROLES_ATTR])) {
             if (
                 in_array(self::ROLE_ADMIN, $postData[User::ROLES_ATTR], true)
