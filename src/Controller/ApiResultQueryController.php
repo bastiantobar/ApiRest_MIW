@@ -136,10 +136,10 @@ class ApiResultQueryController extends AbstractController implements ApiResultQu
         path: "/api/v1/results/{resultId}.{_format}",
         name: 'optionsResult',
         requirements: [
-            'userId' => "\d+",
+            'resultId' => "\d+",
             '_format' => "json|xml"
         ],
-        defaults: [ 'userId' => 0, '_format' => 'json' ],
+        defaults: [ 'resultId' => 0, '_format' => 'json' ],
         methods: [ Request::METHOD_OPTIONS ],
     )]
     public function optionsActionResult(int|null $resultId): Response
@@ -150,12 +150,13 @@ class ApiResultQueryController extends AbstractController implements ApiResultQu
         $methods[] = Request::METHOD_OPTIONS;
 
         return new Response(
-            null,
+            '',
             Response::HTTP_NO_CONTENT,
             [
-                self::HEADER_ALLOW => implode(',', $methods),
-                self::HEADER_CACHE_CONTROL => 'public, inmutable'
+                'Allow' => implode(', ', $methods), // Configuración correcta del encabezado Allow
+                'Cache-Control' => 'public, immutable',
             ]
         );
     }
+
 }

@@ -8,6 +8,7 @@
     #[ORM\Entity, ORM\Table(name: 'results')]
     class Result
     {
+        public final const RESULT_ATTR = 'result';
         public final const SCORE_ATTR = 'score';
         public final const USER_ID_ATTR = 'userId';
         public final const DATE_ATTR = 'timestamp';
@@ -19,7 +20,7 @@
         )]
         #[ORM\Id, ORM\GeneratedValue(strategy: 'IDENTITY')]
         #[Serializer\XmlAttribute]
-        private ?int $id = 0;
+        private ?int $id = null;
 
         #[ORM\Column(
             name: 'score',

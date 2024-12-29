@@ -124,7 +124,7 @@ class ApiResultCommandController extends AbstractController implements ApiResult
 
         $this->entityManager->persist($result);
         $this->entityManager->flush();
-
+        dump($result->getId());
         $responseContent = [
             'id' => $result->getId(),
             'user' => [
@@ -145,7 +145,7 @@ class ApiResultCommandController extends AbstractController implements ApiResult
             'score' => $result->getScore(),
             'timestamp' => $result->getDate()->format('Y-m-d\TH:i:s.u\Z'),
         ];
-
+        //dump($responseContent);
         return Utils::apiResponse(
             Response::HTTP_CREATED,
             $responseContent,
