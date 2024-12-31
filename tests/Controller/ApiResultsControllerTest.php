@@ -130,7 +130,6 @@ class ApiResultsControllerTest extends BaseTestCase
         self::$client->request(Request::METHOD_GET, self::RUTA_API, [], [], self::$adminHeaders);
         $response = self::$client->getResponse();
 
-        // Verificaciones
         self::assertTrue($response->isSuccessful(), 'Response is not successful');
         self::assertNotNull($response->getEtag(), 'ETag is null');
         $r_body = strval($response->getContent());
@@ -140,79 +139,28 @@ class ApiResultsControllerTest extends BaseTestCase
 
         return (string) $response->getEtag();
     }
-
-    /*
-        public function testCGetResultAction200Ok(): string
-        {
-            $results = $this->entityManager->getRepository(Result::class)->findAll();
-            if (empty($results)) {
-                $user = $this->entityManager->getRepository(User::class)->findOneBy(['email' => 'admin@example.com']);
-                self::assertNotNull($user, 'Admin user not found in the database');
-
-                $result = new Result($user, 100, new \DateTime());
-                $this->entityManager->persist($result);
-                $this->entityManager->flush();
-            }
-
-            self::$adminHeaders = $this->getTokenHeaders(
-                self::$role_admin[User::EMAIL_ATTR],
-                self::$role_admin[User::PASSWD_ATTR]
-            );
-
-            self::$client->request(
-                Request::METHOD_GET,
-                self::RUTA_API . '.json/score',
-                [],
-                [],
-                self::$adminHeaders
-            );
-            $response = self::$client->getResponse();
-
-            self::assertTrue($response->isSuccessful(), 'Response is not successful');
-            self::assertSame(Response::HTTP_OK, $response->getStatusCode(), 'Response status code is not 200');
-
-            self::assertNotNull($response->getEtag(), 'Response does not have an ETag');
-
-            $r_body = strval($response->getContent());
-
-            self::assertJson($r_body, 'Response body is not a valid JSON');
-
-            $results = json_decode($r_body, true);
-
-            self::assertArrayHasKey('results', $results, 'Response does not contain "results" key');
-
-            self::assertNotEmpty($results['results'], 'Results list is empty');
-
-            foreach ($results['results'] as $result) {
-                self::assertArrayHasKey('id', $result, 'Result does not have an "id"');
-                self::assertArrayHasKey('score', $result, 'Result does not have a "score"');
-                self::assertArrayHasKey('date', $result, 'Result does not have a "date"');
-                self::assertArrayHasKey('user', $result, 'Result does not have a "user"');
-
-                self::assertArrayHasKey('id', $result['user'], 'User does not have an "id"');
-                self::assertArrayHasKey('username', $result['user'], 'User does not have a "username"');
-            }
-
-            return (string) $response->getEtag();
-        }
+    /**
+     * @dataProvider providerRoutes404
+     */
+    public function testResultStatus404NotFound(string $method, int $userId): void
+    {
+        self::$client->request(
+            $method,
+            self::RUTA_API . '/' . $userId,
+            [],
+            [],
+            self::$adminHeaders
+        );
+        $this->checkResponseErrorMessage(
+            self::$client->getResponse(),
+            Response::HTTP_NOT_FOUND
+        );
+    }
 
 
 
-        public function testResultStatus404NotFound(string $method, int $userId): void
-        {
-            self::$client->request(
-                $method,
-                self::RUTA_API . '/' . $userId,
-                [],
-                [],
-                self::$adminHeaders
-            );
-            $this->checkResponseErrorMessage(
-                self::$client->getResponse(),
-                Response::HTTP_NOT_FOUND
-            );
-        }
-    */
+
+
     /**
      * Test POST   /users 403 FORBIDDEN
      * Test PUT    /users/{userId} 403 FORBIDDEN
@@ -242,54 +190,10 @@ class ApiResultsControllerTest extends BaseTestCase
      * P R O V I D E R S
      * * * * * * * * * *
      */
-
-    /**
-     * User provider (incomplete) -> 422 status code
-     *
-     * @return Generator user data [email, password]
-     */
-    /*
-    #[ArrayShape([
-        'no_email' => "array",
-        'no_passwd' => "array",
-        'nothing' => "array"
-    ])]
-    public static function userProvider422(): Generator
-    {
-        $faker = FakerFactoryAlias::create('es_ES');
-        $email = $faker->email();
-        $password = $faker->password();
-
-        yield 'no_email'  => [ null,   $password ];
-        yield 'no_passwd' => [ $email, null      ];
-        yield 'nothing'   => [ null,   null      ];
-    }
-
-    /**
-     * Route provider (expected status: 401 UNAUTHORIZED)
-     *
-     * @return Generator name => [ method, url ]
-     */
-    #[ArrayShape([
-        'cgetAction401' => "array",
-        'getAction401' => "array",
-        'postAction401' => "array",
-        'putAction401' => "array",
-        'deleteAction401' => "array"
-    ])]
-    public static function providerRoutes401(): Generator
-    {
-        yield 'cgetAction401'   => [ Request::METHOD_GET,    self::RUTA_API ];
-        yield 'getAction401'    => [ Request::METHOD_GET,    self::RUTA_API . '/1' ];
-        yield 'postAction401'   => [ Request::METHOD_POST,   self::RUTA_API ];
-        yield 'putAction401'    => [ Request::METHOD_PUT,    self::RUTA_API . '/1' ];
-        yield 'deleteAction401' => [ Request::METHOD_DELETE, self::RUTA_API . '/1' ];
-    }
-
     /**
      * Route provider (expected status 404 NOT FOUND)
      *
-     * @return Generator name => [ method ]
+     * @return Generator
      */
     #[ArrayShape([
         'getAction404' => "array",
@@ -298,9 +202,9 @@ class ApiResultsControllerTest extends BaseTestCase
     ])]
     public static function providerRoutes404(): Generator
     {
-        yield 'getAction404'    => [ Request::METHOD_GET ];
-        yield 'putAction404'    => [ Request::METHOD_PUT ];
-        yield 'deleteAction404' => [ Request::METHOD_DELETE ];
+        yield 'getAction404'    => [ Request::METHOD_GET, 9999 ];
+        yield 'putAction404'    => [ Request::METHOD_PUT, 9999 ];
+        yield 'deleteAction404' => [ Request::METHOD_DELETE, 9999 ];
     }
 
     /**
