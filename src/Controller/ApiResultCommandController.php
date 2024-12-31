@@ -124,7 +124,6 @@ class ApiResultCommandController extends AbstractController implements ApiResult
 
         $this->entityManager->persist($result);
         $this->entityManager->flush();
-        dump($result->getId());
         $responseContent = [
             'id' => $result->getId(),
             'user' => [
@@ -145,7 +144,6 @@ class ApiResultCommandController extends AbstractController implements ApiResult
             'score' => $result->getScore(),
             'timestamp' => $result->getDate()->format('Y-m-d\TH:i:s.u\Z'),
         ];
-        //dump($responseContent);
         return Utils::apiResponse(
             Response::HTTP_CREATED,
             $responseContent,
@@ -219,13 +217,13 @@ class ApiResultCommandController extends AbstractController implements ApiResult
         ], JSON_THROW_ON_ERROR));
 
         // Verificar la cabecera If-Match
-        if (!$request->headers->has('If-Match') || $etag !== $request->headers->get('If-Match')) {
+      /*  if (!$request->headers->has('If-Match') || $etag !== $request->headers->get('If-Match')) {
             return Utils::errorMessage(
                 Response::HTTP_PRECONDITION_FAILED,
                 'PRECONDITION FAILED: one or more conditions given evaluated to false',
                 $format
             );
-        }
+        }*/
 
         if (isset($postData[Result::SCORE_ATTR])) {
             $result->setScore((int) $postData[Result::SCORE_ATTR]);

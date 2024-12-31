@@ -67,7 +67,6 @@ class ApiResultsControllerTest extends BaseTestCase
         );
         self::assertNotEmpty($response->headers->get('Allow'));
     }
-
     public function testPostResultAction201Created(): array
     {
         // Asegúrate de que el usuario administrador está configurado
@@ -142,11 +141,11 @@ class ApiResultsControllerTest extends BaseTestCase
     /**
      * @dataProvider providerRoutes404
      */
-    public function testResultStatus404NotFound(string $method, int $userId): void
+    public function testResultStatus404NotFound(string $method, int $resultId): void
     {
         self::$client->request(
             $method,
-            self::RUTA_API . '/' . $userId,
+            self::RUTA_API . '/' . $resultId,
             [],
             [],
             self::$adminHeaders
@@ -156,35 +155,6 @@ class ApiResultsControllerTest extends BaseTestCase
             Response::HTTP_NOT_FOUND
         );
     }
-
-
-
-
-
-    /**
-     * Test POST   /users 403 FORBIDDEN
-     * Test PUT    /users/{userId} 403 FORBIDDEN
-     * Test DELETE /users/{userId} 403 FORBIDDEN
-     *
-     * @param string $method
-     * @param string $uri
-     * @dataProvider providerRoutes403
-     * @return void
-     */
-    /*
-    public function testResultStatus403Forbidden(string $method, string $uri): void
-    {
-        $userHeaders = $this->getTokenHeaders(
-            self::$role_user[User::EMAIL_ATTR],
-            self::$role_user[User::PASSWD_ATTR]
-        );
-        self::$client->request($method, $uri, [], [], $userHeaders);
-        $this->checkResponseErrorMessage(
-            self::$client->getResponse(),
-            Response::HTTP_FORBIDDEN
-        );
-    }
-
     /**
      * * * * * * * * * *
      * P R O V I D E R S

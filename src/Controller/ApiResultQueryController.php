@@ -69,10 +69,17 @@ class ApiResultQueryController extends AbstractController implements ApiResultQu
                 fn($result) => [
                     'id' => $result->getId(),
                     'score' => $result->getScore(),
-                    'date' => $result->getDate()->format('Y-m-d H:i:s'),
+                    'timestamp' => $result->getDate()->format('Y-m-d H:i:s'),
                     'user' => [
-                        'id' => $result->getUser()->getId(),
-                        'username' => $result->getUser(),
+                        $result->getUser(),
+                    ],
+                    '_links' => [
+                        'parent' => [
+                            'href' => '/api/v1/results',
+                        ],
+                        'self' => [
+                            'href' => '/api/v1/results/' . $result->getId(),
+                        ],
                     ],
                 ],
                 $results
